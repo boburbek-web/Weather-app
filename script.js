@@ -1,0 +1,79 @@
+const api = {
+    key: "d4dcea441c7854733b473eb3d815ea45",
+    baseurl: "https://api.openweathermap.org/data/2.5/"
+}
+
+const searchBox = document.querySelector(".search-box");
+
+searchBox.addEventListener("keypress", setQuery)
+
+function setQuery (e) {
+    if (e.keyCode == 13) {
+        getResults(searchBox.value)
+        console.log(searchBox.value);
+    }
+}
+
+function getResults (query) {
+    fetch(`${api.baseurl}weather?q=${query}&units=metric&APPID=${api.key}`)
+    .then(weather => {
+        return weather.json();
+    }).then(displayResults)
+}
+
+let now = new Date()
+   
+$(".date").textContent = dataBuilder(now)
+
+function displayResults (weather) {
+    console.log(weather);
+
+    $(".city").textContent = `${weather.name}, ${weather.sys.country}`;
+
+    let now = new Date()
+   
+    $(".date").textContent = dataBuilder(now)
+
+
+    $(".temp").innerHTML = `${Math.round(weather.main.temp)}<span>°c</span>`;
+
+    $('.weather').innerHTML = weather.weather[0].main;
+
+   
+    $('.hi-low').innerHTML = `${Math.round(weather.main.temp_min)} °c / ${Math.round(weather.main.temp_max)} °c`;
+}
+
+function dataBuilder (a) {
+    let months = [
+        "Yanvar",
+        "Fevral",
+        "Mart",
+        "Aprel",
+        "May",
+        "Iyun",
+        "Iyul",
+        "Avgust",
+        "Sentyabr",
+        "Oktyabr",
+        "Noyabr",
+        "Dekabr"
+    ];
+
+    let days = [
+        "Yakshanba",
+        "Dushanba",
+        "Seshanba",
+        "Chorshanba",
+        "Payshanba",
+        "Juma",
+        "Shanba"
+    ];
+
+    let day = days[a.getDay()];
+    let date = a.getDate();
+    let month = months[a.getMonth()];
+    let year = a.getFullYear();
+
+    
+    return `${day}, ${date}-${month} ${year}-yil.`
+}
